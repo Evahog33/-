@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            border: 0;
+        }
+
+        .all {
+            width: 1000px;
+            height: 500px;
+            padding: 7px;
+            border: 1px solid #ccc;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        .screen {
+            width: 1000px;
+            height: 500px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .screen li {
+            width: 1000px;
+            height: 500px;
+            overflow: hidden;
+            float: left;
+        }
+
+        .screen ul {
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 6000px;
+        }
+
+        .all ol {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        .all ol li {
+            float: left;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 1px solid #ccc;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 14px;
+        }
+
+        .all ol li.current {
+            background: yellow;
+        }
+
+        #arr {
+            display: none;
+        }
+
+        #arr span {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            margin-top: -20px;
+            background: #000;
+            cursor: pointer;
+            line-height: 40px;
+            text-align: center;
+            font-weight: bold;
+            font-family: '黑体';
+            font-size: 30px;
+            color: #fff;
+            opacity: 0.3;
+            border: 1px solid #fff;
+        }
+
+        #arr #right {
+            right: 5px;
+            left: auto;
+        }
+    </style>
+    <script src="./jquery-1.12.2.min.js"></script>
+    <script>
+        $(function () {
+            var ulList = $('ul li');
+            var imgWidth = $('.screen').width();
+            var index = 0;
+            var timer = null;
+            for (var i = 0; i < ulList.length; i++) {
+                $('<li>' + (i + 1) + '</li>').appendTo('ol');
+            }
+            $('ol li').eq(index).addClass('current')
+            ulList.eq(0).clone(true).appendTo('ul');
+            $('#box').mouseover(function () {
+                $('#arr').show();
+                clearInterval(timer);
+            }).mouseout(function () {
+                $('#arr').hide();
+                timer = setInterval(function(){
+                    $('#right').click();
+                },3000)
+            })
+            $('#right').click(function () {
+                index++;
+                $('ul').animate({ left: -imgWidth * index }, 500, function () {
+                    console.log(index);
+                    if (index == 5) {
+                        index = 0;
+                        $('ul').css("left", 0);
+                    }
+                    $('ol li').eq(index).addClass('current').siblings().removeClass('current');
+                })
+            })
+            $('#left').click(function () {
+                if (index == 0) {
+                    index = 5;
+                    $('ul').css("left", -imgWidth * index);
+                }
+                index--;
+                $('ul').animate({ left: -imgWidth * index }, 500, function () {
+                    console.log(index);
+                    $('ol li').eq(index).addClass('current').siblings().removeClass('current');
+                })
+            })
+            $('ol li').mouseover(function(){
+                index = $(this).index();
+                $('ol li').eq(index).addClass('current').siblings().removeClass('current');
+                $('ul').animate({ left: -imgWidth * index }, 500, function () {
+                    console.log(index);
+                })
+            })
+            timer = setInterval(function(){
+                $('#right').click();
+            },3000)
+        })
+    </script>
+</head>
+
+<body>
+    <div class="all" id='box'>
+        <div class="screen">
+            <ul>
+                <li><img src="images/1.jpg" width="1000" height="500" /></li>
+                <li><img src="images/2.jpg" width="1000" height="500" /></li>
+                <li><img src="images/3.jpg" width="1000" height="500" /></li>
+                <li><img src="images/4.jpg" width="1000" height="500" /></li>
+                <li><img src="images/5.jpg" width="1000" height="500" /></li>
+            </ul>
+            <ol>
+
+            </ol>
+        </div>
+        <div id="arr"><span id="left">&lt;</span><span id="right">&gt;</span></div>
+    </div>
+</body>
+
+</html>
